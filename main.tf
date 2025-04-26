@@ -8,25 +8,32 @@ provider "github" {
 
 }
 
-resource "github_repository" "terraform-script-repo" {
-  name        = "terraform-script-repo"
-  description = "An example repository created with Terraform"
-  # private     = false
-  visibility = "public"
+# resource "github_repository" "terraform-script-repo" {
+#   name        = "terraform-script-repo"
+#   description = "An example repository created with Terraform"
+#   # private     = false
+#   visibility = "public"
 
-  lifecycle {
-    prevent_destroy = true
+#   lifecycle {
+#     prevent_destroy = true
+#   }
+
+
+# }
+
+resource "aws_instance" "app_server" {
+  ami           = var.ami
+  instance_type = var.instance_type
+
+  tags = {
+    Name = "ExampleAppServerInstance"
   }
-
-
+}
+data "aws_instance" "app_server" {
+  instance_id = aws_instance.app_server.id
+}
+data "aws_subnet" "subnet" {
+  id = aws_instance.app_server.subnet_id
 }
 
-# resource "aws_instance" "app_server" {
-#   ami           = "ami-060a84cbcb5c14844"
-#   instance_type = "t2.micro"
-
-#   tags = {
-#     Name = "ExampleAppServerInstance"
-#   }
-# }
 
